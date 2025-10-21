@@ -89,6 +89,42 @@
                             <p><strong id="searchHistoryCount">0</strong> searches in history</p>
                         </div>
                     </div>
+                    
+                    <div class="box api-card">
+                        <h3 class="title is-6 has-text-light">
+                            <i class="fas fa-key mr-2"></i>
+                            API Configuration
+                        </h3>
+                        <div class="field">
+                            <label class="label has-text-light">Google Cloud Translation API Key</label>
+                            <div class="control">
+                                <input class="input dark-input" type="password" id="apiKeyInput" 
+                                       placeholder="Enter your API key..." 
+                                       maxlength="100">
+                            </div>
+                            <p class="help has-text-grey-light">
+                                <a href="https://console.cloud.google.com/apis/library/translate.googleapis.com" 
+                                   target="_blank" class="has-text-info">
+                                    Get your free API key here
+                                </a>
+                            </p>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-small dark-button" id="testApiBtn">
+                                    <i class="fas fa-check mr-1"></i>
+                                    Test API
+                                </button>
+                                <button class="button is-small dark-button" id="saveApiBtn">
+                                    <i class="fas fa-save mr-1"></i>
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                        <div id="apiStatus" class="api-status">
+                            <span class="tag is-light">Status: Unknown</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
