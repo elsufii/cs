@@ -43,7 +43,8 @@ class TranslationView {
         this.elements.searchHistoryCount.textContent = stats.searchHistoryCount;
     }
 
-    renderTranslationCards(countries, translations, originalText) {
+        // Render translation cards
+    renderTranslationCards(countries, translations, originalText, weatherMap = new Map()) {
         const container = this.elements.translationCards;
         
         if (!countries || countries.length === 0) {
@@ -55,7 +56,8 @@ class TranslationView {
         
         countries.forEach((country, index) => {
             const translation = translations.get(country.primaryLanguage) || originalText;
-            const cardHTML = this.createTranslationCard(country, translation, originalText);
+            const weather = weatherMap.get(country.code);
+            const cardHTML = this.createTranslationCard(country, translation, originalText, weather);
             
             const column = document.createElement('div');
             column.className = 'column is-one-third';
@@ -75,10 +77,18 @@ class TranslationView {
         }, 300);
     }
 
-    createTranslationCard(country, translation, originalText) {
+    // Create individual translation card
+    createTranslationCard(country, translation, originalText, weatherData = null) {
         const flagImg = this.createFlagImage(country.flagUrl, country.flagAlt, country.code);
         const languages = country.languages.slice(0, 2).join(', ');
         const moreLanguages = country.languages.length > 2 ? ` +${country.languages.length - 2} more` : '';
+        
+        // Weather display
+        const weatherHTML = weatherData ? `
+            <div class="weather-info">
+                🌡️ ${weatherData.temperature}°C - ${weatherData.description}
+            </div>
+        ` : '';
 
         return `
             <div class="translation-card" data-country="${country.code}">
@@ -86,6 +96,7 @@ class TranslationView {
                     ${flagImg}
                 </div>
                 <div class="country-name">${country.name}</div>
+                ${weatherHTML}
                 <div class="translation-text">${translation}</div>
                 <div class="original-text">Original: "${originalText}"</div>
                 <div class="language-info">

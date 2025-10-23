@@ -4,7 +4,11 @@ class TranslationModel {
         this.translations = new Map();
         this.searchHistory = this.loadSearchHistory();
         this.currentSearch = null;
-        this.apiKey = 'api'; // replace with your  API key
+        // Set your Google Cloud Translation API key here
+        this.apiKey = 'YOUR_GOOGLE_CLOUD_TRANSLATION_API_KEY';
+        // Set your OpenWeatherMap API key here
+        this.weatherApiKey = 'YOUR_OPENWEATHERMAP_API_KEY'; // Get from openweathermap.org
+        this.weatherCache = new Map(); // Cache weather data
     }
 
     async loadCountries() {
@@ -26,6 +30,43 @@ class TranslationModel {
         } catch (error) {
             console.error('Error loading countries:', error);
             throw error;
+        }
+    }
+
+        // Get weather data for a country
+    async getWeatherForCountry(countryName, countryCode) {
+        try {
+            if (this.weatherCache.has(countryCode)) {
+                return this.weatherCache.get(countryCode);
+            }
+
+            if (!this.weatherApiKey || this.weatherApiKey === 'YOUR_OPENWEATHERMAP_API_KEY') {
+                return null; // No API key set
+            }
+
+            const response = await fetch(
+                `https://api.openweathermap.org/data/2.5/weather?q=${countryName}&appid=${this.weatherApiKey}&units=metric`
+            );
+
+            if (!response.ok) {
+                throw new Error('Weather API request failed');
+            }
+
+            const data = await response.json();
+            const weatherData = {
+                temperature: Math.round(data.main.temp),
+                description: data.weather[0].description,
+                icon: data.weather[0].icon
+            };
+
+            // Cache for 10 minutes
+            this.weatherCache.set(countryCode, weatherData);
+            setTimeout(() => this.weatherCache.delete(countryCode), 10 * 60 * 1000);
+
+            return weatherData;
+        } catch (error) {
+            console.warn(`Weather data unavailable for ${countryName}:`, error);
+            return null;
         }
     }
 

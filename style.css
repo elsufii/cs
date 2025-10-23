@@ -345,3 +345,14 @@ body {
     margin-bottom: 1rem;
     opacity: 0.5;
 }
+
+.weather-info {
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    background-color: var(--darker-bg);
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}

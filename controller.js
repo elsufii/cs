@@ -45,6 +45,7 @@ class TranslationController {
         });
     }
 
+        // Update the handleTranslate function
     async handleTranslate() {
         if (this.isTranslating) return;
 
@@ -62,13 +63,27 @@ class TranslationController {
             this.view.showLoading();
             
             this.model.saveSearch(searchData.text, searchData.sourceLang);
-            
             await this.model.translateForAllCountries(searchData.text, searchData.sourceLang);
+            
+            // Fetch weather for all countries (first 20 to avoid rate limits)
+            const weatherPromises = this.model.countries.slice(0, 20).map(async country => {
+                const weather = await this.model.getWeatherForCountry(country.name, country.code);
+                return { country: country.code, weather };
+            });
+            
+            const weatherResults = await Promise.all(weatherPromises);
+            const weatherMap = new Map();
+            weatherResults.forEach(result => {
+                if (result.weather) {
+                    weatherMap.set(result.country, result.weather);
+                }
+            });
             
             this.view.renderTranslationCards(
                 this.model.countries,
                 this.model.translations,
-                searchData.text
+                searchData.text,
+                weatherMap
             );
             
             this.updateStats();
@@ -76,7 +91,7 @@ class TranslationController {
             
             const translationCount = this.model.translations.size;
             this.view.showNotification(
-                `Successfully translated "${searchData.text}" into ${translationCount} languages!`, 
+                `Successfully translated "${searchData.text}" with weather data!`, 
                 'success'
             );
             
