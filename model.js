@@ -4,11 +4,11 @@ class TranslationModel {
         this.translations = new Map();
         this.searchHistory = this.loadSearchHistory();
         this.currentSearch = null;
-        // Set your Google Cloud Translation API key here
+        // Google Cloud Translation API key here
         this.apiKey = 'YOUR_GOOGLE_CLOUD_TRANSLATION_API_KEY';
-        // Set your OpenWeatherMap API key here
-        this.weatherApiKey = 'YOUR_OPENWEATHERMAP_API_KEY'; // Get from openweathermap.org
-        this.weatherCache = new Map(); // Cache weather data
+        // OpenWeatherMap API key here
+        this.weatherApiKey = 'YOUR_OPENWEATHERMAP_API_KEY'; 
+        this.weatherCache = new Map(); // to cache weather data
     }
 
     async loadCountries() {
@@ -41,7 +41,7 @@ class TranslationModel {
             }
 
             if (!this.weatherApiKey || this.weatherApiKey === 'YOUR_OPENWEATHERMAP_API_KEY') {
-                return null; // No API key set
+                return null; 
             }
 
             const response = await fetch(
@@ -59,7 +59,7 @@ class TranslationModel {
                 icon: data.weather[0].icon
             };
 
-            // Cache for 10 minutes
+            // Caching for 10 minutes
             this.weatherCache.set(countryCode, weatherData);
             setTimeout(() => this.weatherCache.delete(countryCode), 10 * 60 * 1000);
 
@@ -75,7 +75,6 @@ class TranslationModel {
         
         const langCodes = Object.keys(languages);
         
-        //Country-specific
         const countryPreferences = {
             'TZ': ['sw', 'swa', 'en', 'eng'], 
             'AR': ['es', 'spa'],
@@ -148,7 +147,7 @@ class TranslationModel {
         return firstLang || 'en';
     }
 
-    // Map language codes to Google Translate supported codes
+    // mapping language codes to google translated supported codes
     mapLanguageCode(code) {
         if (!code) return 'en';
         
@@ -297,7 +296,7 @@ class TranslationModel {
 
         this.searchHistory.unshift(search);
         
-        // Keeping last 10 searches
+        // keeping last 10 searches
         if (this.searchHistory.length > 10) {
             this.searchHistory = this.searchHistory.slice(0, 10);
         }
@@ -307,7 +306,7 @@ class TranslationModel {
         return search;
     }
 
-    // Loading history from localStorage
+    // load history from localStorage
     loadSearchHistory() {
         try {
             const history = localStorage.getItem('translationHistory');

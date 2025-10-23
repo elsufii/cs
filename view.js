@@ -77,13 +77,12 @@ class TranslationView {
         }, 300);
     }
 
-    // Create individual translation card
+    // individual translation card
     createTranslationCard(country, translation, originalText, weatherData = null) {
         const flagImg = this.createFlagImage(country.flagUrl, country.flagAlt, country.code);
         const languages = country.languages.slice(0, 2).join(', ');
         const moreLanguages = country.languages.length > 2 ? ` +${country.languages.length - 2} more` : '';
         
-        // Weather display
         const weatherHTML = weatherData ? `
             <div class="weather-info">
                 🌡️ ${weatherData.temperature}°C - ${weatherData.description}
